@@ -1,0 +1,74 @@
+# ==============================================================================
+# Multi-Agent AI System - Git Ignore Configuration
+# ==============================================================================
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Build & Distribution artifacts
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Python Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables & secrets (CRITICAL: NEVER COMMIT SECRETS)
+.env
+.env.*
+!.env.example
+*.env
+*.local
+*.pem
+*.key
+backend/API/
+API/
+
+# Node.js & Next.js build artifacts
+node_modules/
+.next/
+out/
+.npm/
+.yarn/
+*.tsbuildinfo
+
+# Application Data & Local Runtime Storage (Checkpoints, Vectors, Mails)
+data/
+backend/data/
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# Caches and Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.cache/
+
+# IDEs & System files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini

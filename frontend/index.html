@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Antigravity | Multi-Agent Assistant</title>
+  <meta name="description" content="Simple, friendly, and powerful Multi-Agent AI Task Automation Control Center.">
+  
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Markdown & Code Highlight CDNs -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app" class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h2>ANTIGRAVITY</h2>
+            <span class="brand-badge">Multi-Agent OS</span>
+          </div>
+        </div>
+        <button id="btn-new-chat" class="btn btn-primary btn-sm btn-icon" title="New Conversation Thread">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>New Thread</span>
+        </button>
+      </div>
+
+      <!-- SPECIALIZED AGENTS STATUS -->
+      <div class="sidebar-section">
+        <div class="section-title">
+          <span>Active Agents</span>
+          <span class="count-pill">9</span>
+        </div>
+        <div class="agent-roster" id="agent-roster">
+          <div class="agent-chip" data-agent="supervisor">
+            <span class="status-dot"></span>
+            <span class="agent-icon">👑</span>
+            <div class="agent-info">
+              <span class="agent-name">Supervisor</span>
+              <span class="agent-role">Planner & Router</span>
+            </div>
+          </div>
+          <div class="agent-chip" data-agent="research">
+            <span class="status-dot"></span>
+            <span class="agent-icon">🔍</span>
+            <div class="agent-info">
+              <span class="agent-name">Researcher</span>
+              <span class="agent-role">RAG + Web Search</span>
+            </div>
+          </div>
+          <div class="agent-chip" data-agent="analysis">
+            <span class="status-dot"></span>
+            <span class="agent-icon">📊</span>
+            <div class="agent-info">
+              <span class="agent-name">Analyst</span>
+              <span class="agent-role">Evaluation & Trade-offs</span>
+            </div>
+          </div>
+          <div class="agent-chip" data-agent="coder">
+            <span class="status-dot"></span>
+            <span class="agent-icon">💻</span>
+            <div class="agent-info">
+              <span class="agent-name">Coding</span>
+              <span class="agent-role">Sandbox Execution</span>
+            </div>
+          </div>
+          <div class="agent-chip" data-agent="database">
+            <span class="status-dot"></span>
+            <span class="agent-icon">🗄️</span>
+            <div class="agent-info">
+              <span class="agent-name">Database</span>
+              <span class="agent-role">Read-only SQL</span>
+            </div>
+          </div>
+          <div class="agent-chip" data-agent="document">
+            <span class="status-dot"></span>
+            <span class="agent-icon">📑</span>
+            <div class="agent-info">
+              <span class="agent-name">Document</span>
+              <span class="agent-role">Report Exporter</span>
+            </div>
+          </div>
+          <div class="agent-chip" data-agent="email">
+            <span class="status-dot"></span>
+            <span class="agent-icon">✉️</span>
+            <div class="agent-info">
+              <span class="agent-name">Email</span>
+              <span class="agent-role">Draft & Dispatch</span>
+            </div>
+          </div>
+          <div class="agent-chip" data-agent="calendar">
+            <span class="status-dot"></span>
+            <span class="agent-icon">📅</span>
+            <div class="agent-info">
+              <span class="agent-name">Calendar</span>
+              <span class="agent-role">Slots & Scheduling</span>
+            </div>
+          </div>
+          <div class="agent-chip" data-agent="validator">
+            <span class="status-dot"></span>
+            <span class="agent-icon">🛡️</span>
+            <div class="agent-info">
+              <span class="agent-name">Validator</span>
+              <span class="agent-role">QA & Policy Audit</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KNOWLEDGE BASE & RAG -->
+      <div class="sidebar-section">
+        <div class="section-title">
+          <span>RAG Knowledge Base</span>
+          <button id="btn-refresh-docs" class="icon-action" title="Refresh Documents">↻</button>
+        </div>
+        <div class="kb-card">
+          <div class="kb-stats">
+            <div>
+              <span class="kb-num" id="kb-doc-count">0</span>
+              <span class="kb-label">Documents</span>
+            </div>
+            <div>
+              <span class="kb-num" id="kb-chunk-count">0</span>
+              <span class="kb-label">Chunks</span>
+            </div>
+          </div>
+          <label for="doc-upload-input" class="btn btn-outline btn-sm btn-block upload-label" id="upload-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <span>Upload Document</span>
+            <input type="file" id="doc-upload-input" accept=".pdf,.txt,.md" style="display:none;">
+          </label>
+          <div id="upload-status" class="upload-status-text"></div>
+        </div>
+      </div>
+
+      <!-- THREAD HISTORY -->
+      <div class="sidebar-section flex-grow">
+        <div class="section-title">
+          <span>Conversations</span>
+          <button id="btn-clear-history" class="icon-action" title="Clear All Threads">🗑️</button>
+        </div>
+        <div class="thread-list" id="thread-list">
+          <!-- Dynamic thread items will be injected here -->
+        </div>
+      </div>
+
+      <!-- SIDEBAR FOOTER -->
+      <div class="sidebar-footer">
+        <div class="connection-status" id="connection-status">
+          <span class="pulse-indicator online"></span>
+          <span id="backend-status-text">Backend Connected</span>
+        </div>
+        <button id="btn-config-toggle" class="icon-action" title="Connection Settings">⚙️</button>
+      </div>
+    </aside>
+
+    <!-- MAIN CHAT CONTAINER -->
+    <main class="main-content">
+      <!-- HEADER -->
+      <header class="app-header">
+        <div class="header-left">
+          <div class="active-thread-badge">
+            <span class="tag-label">Thread:</span>
+            <span class="thread-id-display" id="current-thread-display">Initializing...</span>
+          </div>
+          <div id="workflow-status-badge" class="badge badge-neutral">Ready</div>
+        </div>
+        <div class="header-right">
+          <button id="btn-theme-toggle" class="btn btn-secondary btn-sm" title="Switch Theme">
+            <span id="theme-icon">☀️</span>
+            <span id="theme-label">Light Mode</span>
+          </button>
+          <button id="btn-show-inspector" class="btn btn-secondary btn-sm" title="Toggle Execution Inspector">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+            <span>Inspector</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- HUMAN IN THE LOOP CONFIRMATION BANNER -->
+      <div id="confirmation-banner" class="confirmation-banner hidden">
+        <div class="confirmation-content">
+          <div class="conf-icon">⚠️</div>
+          <div class="conf-details">
+            <h4 id="conf-title">Human Confirmation Required</h4>
+            <p id="conf-description">An agent is requesting approval to execute a sensitive external side effect.</p>
+            <div id="conf-action-data" class="conf-data-box"></div>
+          </div>
+        </div>
+        <div class="conf-actions">
+          <button id="btn-conf-approve" class="btn btn-success">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Approve & Execute</span>
+          </button>
+          <button id="btn-conf-reject" class="btn btn-danger">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <span>Reject / Cancel</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- CHAT MESSAGE SCROLLER -->
+      <div class="chat-scroller" id="chat-scroller">
+        <!-- WELCOME STATE -->
+        <div id="welcome-hero" class="welcome-hero">
+          <div class="hero-logo">
+            <div class="glow-orb"></div>
+            <div class="hero-glyph">⚡</div>
+          </div>
+          <h1>Multi-Agent AI Task Automation</h1>
+          <p class="hero-subtitle">
+            Autonomous multi-agent orchestration powered by LangGraph, Groq LLM, MCP dynamic tools, and human-in-the-loop checkpoints.
+          </p>
+
+          <div class="quick-prompts-grid">
+            <div class="quick-card" data-prompt="Research recent developments in Agentic AI architectures, compare their memory and tool calling frameworks, and generate a technical report.">
+              <div class="qc-icon">🔍</div>
+              <div class="qc-text">
+                <strong>Research & Analysis</strong>
+                <span>RAG retrieval + comparative trade-offs</span>
+              </div>
+            </div>
+            <div class="quick-card" data-prompt="Write a Python script to compute the Levenshtein distance between two strings with memoization, and test it in the sandbox.">
+              <div class="qc-icon">💻</div>
+              <div class="qc-text">
+                <strong>Code & Sandbox</strong>
+                <span>AST validation + isolated execution</span>
+              </div>
+            </div>
+            <div class="quick-card" data-prompt="Inspect the database schema, list the tables, and run a safe read-only query on sample records.">
+              <div class="qc-icon">🗄️</div>
+              <div class="qc-text">
+                <strong>Database Query</strong>
+                <span>Schema inspection + read-only SQL</span>
+              </div>
+            </div>
+            <div class="quick-card" data-prompt="Find my available calendar slots for tomorrow and draft a status sync meeting email.">
+              <div class="qc-icon">📅</div>
+              <div class="qc-text">
+                <strong>Calendar & Email</strong>
+                <span>Schedule lookup + human approval guard</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DYNAMIC MESSAGE FEED -->
+        <div class="messages-container" id="messages-container"></div>
+      </div>
+
+      <!-- INPUT BAR -->
+      <div class="chat-input-wrapper">
+        <form id="chat-form" class="chat-input-bar">
+          <textarea
+            id="chat-input"
+            rows="1"
+            placeholder="Instruct the multi-agent system (e.g., 'Analyze system logs', 'Write and execute Python script', 'Query database')..."
+            required
+          ></textarea>
+          <div class="input-actions">
+            <button type="submit" id="btn-send" class="btn btn-primary btn-circle" title="Send Instruction">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+          </div>
+        </form>
+        <div class="input-disclaimer">
+          Antigravity Multi-Agent OS · Sandboxed Execution · Read-Only DB Policy · Human Confirmation Required for Outbound Actions
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT INSPECTOR DRAWER -->
+    <aside class="inspector-drawer" id="inspector-drawer">
+      <div class="drawer-header">
+        <h3>Agent Execution Trace</h3>
+        <button id="btn-close-inspector" class="icon-action">✕</button>
+      </div>
+      <div class="drawer-tabs">
+        <button class="drawer-tab active" data-tab="tab-plan">Plan</button>
+        <button class="drawer-tab" data-tab="tab-code">Code</button>
+        <button class="drawer-tab" data-tab="tab-db">Database</button>
+        <button class="drawer-tab" data-tab="tab-audit">Audit</button>
+        <button class="drawer-tab" data-tab="tab-logs">Logs</button>
+      </div>
+      <div class="drawer-body">
+        <div id="tab-plan" class="tab-pane active">
+          <div class="inspector-empty">No active execution plan. Send a prompt to begin.</div>
+        </div>
+        <div id="tab-code" class="tab-pane">
+          <div class="inspector-empty">No code execution results available.</div>
+        </div>
+        <div id="tab-db" class="tab-pane">
+          <div class="inspector-empty">No database query results available.</div>
+        </div>
+        <div id="tab-audit" class="tab-pane">
+          <div class="inspector-empty">No validator audit results available.</div>
+        </div>
+        <div id="tab-logs" class="tab-pane">
+          <div class="inspector-empty">No agent execution logs.</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settings-modal" class="modal-backdrop hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Backend Settings</h3>
+          <button id="btn-close-settings" class="icon-action">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="api-base-url">FastAPI Server URL</label>
+            <input type="text" id="api-base-url" class="form-input" value="http://127.0.0.1:8000">
+            <small class="form-hint">Default local backend running with uvicorn.</small>
+          </div>
+          <div class="health-check-row">
+            <span>Server Response:</span>
+            <span id="modal-health-status" class="badge badge-neutral">Checking...</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-save-settings" class="btn btn-primary">Save & Reconnect</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
